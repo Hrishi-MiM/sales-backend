@@ -5,6 +5,7 @@ from .models import Assistant
 from .serializers import AssistantSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from config.models import TwilioConfig
 
 class AssistantList(APIView):
     permission_classes = [IsAuthenticated]
@@ -16,6 +17,16 @@ class AssistantList(APIView):
 
     def post(self, request):
         data = JSONParser().parse(request)
+        config_id = data.get('config')
+
+        # Check if the config exists and belongs to the user
+        try:
+            config = TwilioConfig.objects.get(id=config_id, created_by=request.user)
+        except TwilioConfig.DoesNotExist:
+            return JsonResponse({'error': 'Config not found or not owned by you.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        data['config'] = config.id  # Ensure config is valid
+
         serializer = AssistantSerializer(data=data)
         if serializer.is_valid():
             serializer.save(created_by=request.user)
@@ -24,7 +35,7 @@ class AssistantList(APIView):
 
 class AssistantDetail(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get_object(self, id, user):
         try:
             return Assistant.objects.get(id=id, created_by=user)
@@ -44,7 +55,17 @@ class AssistantDetail(APIView):
             return JsonResponse({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
 
         data = JSONParser().parse(request)
-        serializer = AssistantSerializer(assistant, data=data)
+        config_id = data.get('config')
+
+        if config_id:
+            # Check if the config exists and belongs to the user
+            try:
+                config = TwilioConfig.objects.get(id=config_id, created_by=request.user)
+            except TwilioConfig.DoesNotExist:
+                return JsonResponse({'error': 'Config not found or not owned by you.'}, status=status.HTTP_400_BAD_REQUEST)
+            data['config'] = config.id  # Ensure config is valid
+
+        serializer = AssistantSerializer(assistant, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data)
@@ -54,6 +75,5 @@ class AssistantDetail(APIView):
         assistant = self.get_object(id, request.user)
         if assistant is None:
             return JsonResponse({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
-
         assistant.delete()
         return JsonResponse({'message': 'Deleted successfully'}, status=status.HTTP_204_NO_CONTENT)

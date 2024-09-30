@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.parsers import JSONParser
 from .models import Call, Log
+from assistant.models import Assistant
 from .serializers import CallSerializer, LogSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -84,3 +85,47 @@ class LogList(APIView):
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class StatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        # Total number of assistants created by the user
+        total_assistants = Assistant.objects.filter(created_by=user).count()
+
+        # Total number of calls made by the user
+        total_calls = Call.objects.filter(created_by=user).count()
+
+        # Initialize total duration
+        total_duration = 0
+
+        # Fetch all calls by the user
+        calls = Call.objects.filter(created_by=user)
+
+        for call in calls:
+            # Fetch logs for the call ordered by time
+            logs = Log.objects.filter(call=call).order_by('time')
+            if logs.exists():
+                start_time = logs.first().time
+                end_time = logs.last().time
+                # Calculate duration in seconds
+                duration = (end_time - start_time).total_seconds()
+                total_duration += duration
+
+        # Calculate average call duration
+        average_call_duration = 0
+        
+        if total_calls > 0:
+            average_call_duration = total_duration / total_calls
+
+        # Prepare the response data
+        data = {
+            'total_assistants': total_assistants,
+            'total_calls': total_calls,
+            'total_duration_seconds': total_duration,
+            'average_call_duration_seconds': average_call_duration,
+        }
+
+        return JsonResponse(data, status=200)

@@ -29,8 +29,13 @@ class LoginView(APIView):
 
     def post(self, request):
         data = JSONParser().parse(request)
+        email = data.get('email')
         username = data.get('username')
         password = data.get('password')
+
+        if email:
+            user_obj = User.objects.get(email=email)
+            username = user_obj.username
 
         user = authenticate(username=username, password=password)
 

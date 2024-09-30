@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from config.models import TwilioConfig
 
 User = get_user_model()
 
@@ -16,6 +17,7 @@ class Assistant(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assistants', null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    config = models.ForeignKey(TwilioConfig, on_delete=models.CASCADE, related_name='assistants', null=True, blank=True)
 
     def __str__(self):
         return self.name
