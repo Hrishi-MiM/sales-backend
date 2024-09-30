@@ -19,6 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/auth/', include('user_auth.urls')),
     path('api/assistants/', include('assistant.urls')),
     path('api/twilio-config/', include('config.urls')),
     path('api/calls/', include('calls.urls')),
