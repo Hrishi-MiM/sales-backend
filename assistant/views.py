@@ -21,11 +21,12 @@ class AssistantList(APIView):
 
         # Check if the config exists and belongs to the user
         try:
-            config = TwilioConfig.objects.get(id=config_id, created_by=request.user)
+            if config_id:
+                config = TwilioConfig.objects.get(id=config_id, created_by=request.user)
+                data['config'] = config.id
         except TwilioConfig.DoesNotExist:
             return JsonResponse({'error': 'Config not found or not owned by you.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        data['config'] = config.id  # Ensure config is valid
 
         serializer = AssistantSerializer(data=data)
         if serializer.is_valid():
