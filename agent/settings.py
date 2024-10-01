@@ -151,10 +151,7 @@ TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 ELEVENLABS_API_KEY = os.getenv('ELEVENLABS_API_KEY')
 
 # CORS configuration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://ai-sales-frontend-lake.vercel.app/"
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS')
 
 CORS_ALLOW_CREDENTIALS = True 
 
