@@ -26,3 +26,6 @@ class Log(models.Model):
 
     def __str__(self):
         return f"Log for {self.call.session_name} by {self.user}"
+    
+    class Meta:
+        ordering = ['time']
