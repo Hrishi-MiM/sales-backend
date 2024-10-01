@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-)litgp$%^i=mm7fkk=irkge6ek@y7s9f6#zx-h6jyu*!!*i174
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['satyr-frank-primate.ngrok-free.app', '127.0.0.1', 'localhost']
+
+CSRF_TRUSTED_ORIGINS = ['https://satyr-frank-primate.ngrok-free.app',]
 
 AUTH_USER_MODEL = 'user_auth.CustomUser'
 
