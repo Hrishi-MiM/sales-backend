@@ -5,7 +5,7 @@ from assistant.serializers import AssistantSerializer
 class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
-        fields = ['id', 'user', 'message', 'time', 'created_on', 'updated_on']
+        fields = ['id', 'user', 'message', 'created_on', 'updated_on']
         read_only_fields = ('created_on', 'updated_on')
 
 class CallSerializer(serializers.ModelSerializer):
@@ -17,6 +17,6 @@ class CallSerializer(serializers.ModelSerializer):
         model = Call
         fields = (
             'id', 'session_name', 'assistant', 'assistant_data', 'customer_name', 
-            'customer_phone', 'consent', 'created_by', 'created_on', 'updated_on'
+            'customer_phone', 'consent', 'logs', 'created_by', 'created_on', 'updated_on'
         )
         read_only_fields = ('created_by', 'created_on', 'updated_on')

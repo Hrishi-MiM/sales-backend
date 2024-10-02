@@ -23,10 +23,10 @@ class CallAdmin(admin.ModelAdmin):
 admin.site.register(Call, CallAdmin)
 
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('call', 'user', 'message', 'time', 'created_on')
+    list_display = ('call', 'user', 'message', 'created_on')
     search_fields = ('call__session_name', 'user', 'message')
-    list_filter = ('user', 'time')
+    list_filter = ('user', 'created_on')
     readonly_fields = ('created_on', 'updated_on')
-    ordering = ('-time',)
+    ordering = ('-created_on',)
 
 admin.site.register(Log, LogAdmin)

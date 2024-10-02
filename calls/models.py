@@ -35,4 +35,4 @@ class Log(models.Model):
         return f"Log for {self.call.session_name} by {self.user}"
     
     class Meta:
-        ordering = ['time']
+        ordering = ['created_on']
