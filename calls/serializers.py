@@ -15,5 +15,8 @@ class CallSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Call
-        fields = ('id', 'session_name', 'assistant', 'assistant_data', 'created_by', 'created_on', 'updated_on', 'logs')
+        fields = (
+            'id', 'session_name', 'assistant', 'assistant_data', 'customer_name', 
+            'customer_phone', 'consent', 'created_by', 'created_on', 'updated_on'
+        )
         read_only_fields = ('created_by', 'created_on', 'updated_on')

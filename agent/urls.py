@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/assistants/', include('assistant.urls')),
     path('api/twilio-config/', include('config.urls')),
     path('api/calls/', include('calls.urls')),
+    path('api/ai/', include('ai_agent.urls')),
 ]
